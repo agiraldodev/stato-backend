@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "corsheaders",
     # Librerías externas
     "import_export",
     "django_extensions",
@@ -52,6 +53,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -146,3 +148,17 @@ SESSION_COOKIE_AGE = 60 * 60 * 24
 
 # Renovar las 24h cada vez que el usuario interactúa, en vez de contar desde el momento exacto del login
 SESSION_SAVE_EVERY_REQUEST = True
+
+# --- CORS / CSRF (Nuxt corriendo en localhost:3000) ---
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+]
+
+# Necesario para que el navegador guarde/envíe la cookie de sesión entre orígenes distintos
+CORS_ALLOW_CREDENTIALS = True
+
+# Django exige que el origen del POST esté en esta lista para aceptar el CSRF token
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",
+]
