@@ -3,7 +3,13 @@ from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 from .evento import Evento
-from .choices import ClasificacionPesoNacer, SiNoNoAplica, ResultadoTSH
+from .choices import (
+    ClasificacionPesoNacer,
+    SiNoNoAplica,
+    ResultadoTamizaje,
+    ResultadoTamizajeAuditivo,
+    EstadoSalidaRecienNacido,
+)
 
 
 class Neonato(models.Model):
@@ -66,7 +72,7 @@ class Neonato(models.Model):
     )
 
     aplicacion_vitamina_k = models.CharField(
-        max_length=3,
+        max_length=10,
         choices=SiNoNoAplica.choices,
         null=True,
         blank=True,
@@ -93,7 +99,7 @@ class Neonato(models.Model):
 
     resultado_tsh_rn = models.CharField(
         max_length=25,
-        choices=ResultadoTSH.choices,
+        choices=ResultadoTamizaje.choices,
         null=True,
         blank=True,
         verbose_name="RESULTADO TSH RN",
@@ -103,6 +109,124 @@ class Neonato(models.Model):
         null=True,
         blank=True,
         verbose_name="FECHA DE REPORTE DE RESULTADO TSH RN",
+    )
+
+    resultado_tamizaje_cardiopatia = models.CharField(
+        max_length=25,
+        choices=ResultadoTamizaje.choices,
+        null=True,
+        blank=True,
+        verbose_name="RESULTADO TAMIZAJE CARDIOPATÍA",
+    )
+
+    fecha_tamizaje_cardiopatia = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name="FECHA DE TAMIZAJE CARDIOPATÍA",
+    )
+
+    resultado_tamizaje_auditivo = models.CharField(
+        max_length=25,
+        choices=ResultadoTamizajeAuditivo.choices,
+        null=True,
+        blank=True,
+        verbose_name="RESULTADO TAMIZAJE AUDITIVO",
+    )
+
+    fecha_tamizaje_auditivo = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name="FECHA DE TAMIZAJE AUDITIVO",
+    )
+
+    resultado_tamizaje_hiperplasia_suprarrenal = models.CharField(
+        max_length=25,
+        choices=ResultadoTamizaje.choices,
+        null=True,
+        blank=True,
+        verbose_name="RESULTADO TAMIZAJE HIPERPLASIA SUPRARRENAL",
+    )
+
+    fecha_tamizaje_hiperplasia_suprarrenal = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name="FECHA DE TAMIZAJE HIPERPLASIA SUPRARRENAL",
+    )
+
+    resultado_tamizaje_hemoglobinopatias = models.CharField(
+        max_length=25,
+        choices=ResultadoTamizaje.choices,
+        null=True,
+        blank=True,
+        verbose_name="RESULTADO TAMIZAJE HEMOGLOBINOPATÍAS",
+    )
+
+    fecha_tamizaje_hemoglobinopatias = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name="FECHA DE TAMIZAJE HEMOGLOBINOPATÍAS",
+    )
+
+    resultado_tamizaje_galactosemia = models.CharField(
+        max_length=25,
+        choices=ResultadoTamizaje.choices,
+        null=True,
+        blank=True,
+        verbose_name="RESULTADO TAMIZAJE GALACTOSEMIA",
+    )
+
+    fecha_tamizaje_galactosemia = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name="FECHA DE TAMIZAJE GALACTOSEMIA",
+    )
+
+    resultado_tamizaje_fenilcetonuria = models.CharField(
+        max_length=25,
+        choices=ResultadoTamizaje.choices,
+        null=True,
+        blank=True,
+        verbose_name="RESULTADO TAMIZAJE FENILCETONURIA",
+    )
+
+    fecha_tamizaje_fenilcetonuria = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name="FECHA DE TAMIZAJE FENILCETONURIA",
+    )
+
+    resultado_tamizaje_fibrosis_quistica = models.CharField(
+        max_length=25,
+        choices=ResultadoTamizaje.choices,
+        null=True,
+        blank=True,
+        verbose_name="RESULTADO TAMIZAJE FIBROSIS QUÍSTICA",
+    )
+
+    fecha_tamizaje_fibrosis_quistica = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name="FECHA DE TAMIZAJE FIBROSIS QUÍSTICA",
+    )
+
+    resultado_tamizaje_deficiencia_biotinidasa = models.CharField(
+        max_length=25,
+        choices=ResultadoTamizaje.choices,
+        null=True,
+        blank=True,
+        verbose_name="RESULTADO TAMIZAJE DEFICIENCIA DE BIOTINIDASA",
+    )
+
+    fecha_tamizaje_deficiencia_biotinidasa = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name="FECHA DE TAMIZAJE DEFICIENCIA DE BIOTINIDASA",
+    )
+
+    fecha_egreso_recien_nacido = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name="FECHA DE EGRESO DEL RECIÉN NACIDO",
     )
 
     fecha_registro = models.DateTimeField(auto_now_add=True)

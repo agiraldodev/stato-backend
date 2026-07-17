@@ -75,9 +75,16 @@ class ResultadoVIH(models.TextChoices):
     NO_APLICA = "NO APLICA", "No Aplica"
 
 
-class ResultadoTSH(models.TextChoices):
+class ResultadoTamizaje(models.TextChoices):
     NORMAL = "NORMAL", "Normal"
     ALTERADO = "ALTERADO", "Alterado"
+    RIESGO_NO_EVALUADO = "RIESGO NO EVALUADO", "Riesgo No Evaluado"
+    NO_APLICA = "NO APLICA", "No Aplica"
+
+
+class ResultadoTamizajeAuditivo(models.TextChoices):
+    PASA = "PASA", "Pasa"
+    NO_PASA = "NO PASA", "No Pasa"
     RIESGO_NO_EVALUADO = "RIESGO NO EVALUADO", "Riesgo No Evaluado"
     NO_APLICA = "NO APLICA", "No Aplica"
 
@@ -102,3 +109,20 @@ class SiNoNoAplica(models.TextChoices):
     SI = "SI", "Sí"
     NO = "NO", "No"
     NO_APLICA = "NO APLICA", "No Aplica"
+
+
+class EstadoSalidaRecienNacido(models.TextChoices):
+    RECIEN_NACIDO_SANO = "RECIÉN NACIDO SANO", "Recién Nacido Sano"
+    SIFILIS_CONGENITA = "SÍFILIS CONGÉNITA", "Sífilis Congénita"
+    MALFORMACION_CONGENITA = "MALFORMACIÓN CONGÉNITA", "Malformación Congénita"
+    OBITO_FETAL = "OBITO FETAL", "Óbito Fetal"
+    MUERTE_NEONATAL_TEMPRANA = "MUERTE NEONATAL TEMPRANA", "Muerte Neonatal Temprana"
+    MUERTE_NEONATAL_TARDIA = "MUERTE NEONATAL TARDÍA", "Muerte Neonatal Tardía"
+    MUERTE_PERINATAL_MALFORMACION = (
+        "MUERTE PERINATAL Y MALFORMACIÓN CONGÉNITA",
+        "Muerte Perinatal y Malformación Congénita",
+    )
+    MUERTE_PERINATAL_SIFILIS = (
+        "MUERTE PERINATAL Y SÍFILIS CONGÉNITA",
+        "Muerte Perinatal y Sífilis Congénita",
+    )
