@@ -140,3 +140,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTHENTICATION_BACKENDS = [
     "core.auth_backends.HospitalAuthBackend",
 ]
+
+# Duración de la sesión: 24 horas (en segundos)
+SESSION_COOKIE_AGE = 60 * 60 * 24
+
+# Renovar las 24h cada vez que el usuario interactúa, en vez de contar desde el momento exacto del login
+SESSION_SAVE_EVERY_REQUEST = True
