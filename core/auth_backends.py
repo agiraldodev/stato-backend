@@ -49,6 +49,19 @@ class HospitalAuthBackend(ModelBackend):
             return None
 
         if response.status_code != 200:
+            try:
+                error_body = response.json()
+                logger.info(
+                    "Login rechazado por el hospital: %s (HTTP %s) - %s",
+                    error_body.get("codigoError"),
+                    response.status_code,
+                    error_body.get("mensaje"),
+                )
+            except ValueError:
+                logger.warning(
+                    "Login rechazado por el hospital con HTTP %s (respuesta no-JSON)",
+                    response.status_code,
+                )
             return None
 
         data = response.json()

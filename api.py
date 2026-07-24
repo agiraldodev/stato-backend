@@ -2,6 +2,7 @@ from ninja import NinjaAPI, Schema
 from django.contrib.auth import authenticate, login
 from django.http import JsonResponse
 from django.middleware.csrf import get_token
+from django.contrib.auth import logout as django_logout
 
 api = NinjaAPI(
     title="Stato API - Hospital Universitario San José",
@@ -46,6 +47,7 @@ def login_colaborador(request, data: LoginRequestSchema):
                 "numCedula": user.username,
                 "estado": "activo",
                 "es_admin": user.is_superuser,
+                "nombreCompleto": user.first_name,
             },
         }
     else:
@@ -56,3 +58,31 @@ def login_colaborador(request, data: LoginRequestSchema):
             },
             status=401,
         )
+
+
+@api.get("/auth/me", tags=["Autenticación"])
+def get_current_user(request):
+    """
+    Devuelve los datos del usuario autenticado según la sesión actual (cookie). Frontend lo llama al cargar la app para "rehidratar" el estado sin forzar un nuevo login si la sesión de Django sigue siendo válida.
+    """
+    if not request.user.is_authenticated:
+        return JsonResponse({"detail": "No hay sesión activa"}, status=401)
+
+    return {
+        "status": "success",
+        "colaborador": {
+            "numCedula": request.user.username,
+            "nombreCompleto": request.user.first_name,
+            "estado": "activo",
+            "es_admin": request.user.is_superuser,
+        },
+    }
+
+
+@api.post("/auth/logout", tags=["Autenticación"])
+def logout_colaborador(request):
+    """
+    Cierra sesión del usuario actual. Invalida la cookie de sesión del lado del servidor (borra registro en tabla django_session)
+    """
+    django_logout(request)
+    return {"status": "success", "message": "Sesión cerrada correctamente"}

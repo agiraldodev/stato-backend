@@ -152,7 +152,7 @@ SESSION_SAVE_EVERY_REQUEST = True
 # --- CORS / CSRF (Nuxt corriendo en localhost:3000) ---
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
+    "http://127.0.0.1:5173",
 ]
 
 # Necesario para que el navegador guarde/envíe la cookie de sesión entre orígenes distintos
@@ -160,5 +160,5 @@ CORS_ALLOW_CREDENTIALS = True
 
 # Django exige que el origen del POST esté en esta lista para aceptar el CSRF token
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:3000",
+    "http://127.0.0.1:5173",
 ]
