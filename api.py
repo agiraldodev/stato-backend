@@ -4,11 +4,15 @@ from django.http import JsonResponse
 from django.middleware.csrf import get_token
 from django.contrib.auth import logout as django_logout
 
+from riamp.api import router as riamp_router
+
 api = NinjaAPI(
     title="Stato API - Hospital Universitario San José",
     version="1.0.0",
     description="API para el área de estadística y analítica de datos",
 )
+
+api.add_router("/riamp", riamp_router)
 
 
 # Este esquema es lo que React debe enviar obligatoriamente
@@ -28,44 +32,45 @@ def get_csrf_token(request):
 # Endpoint tipo POST para el login
 @api.post("/auth/login", tags=["Autenticación"])
 def login_colaborador(request, data: LoginRequestSchema):
-    """
-    Endpoint para autenticar colaboradores mediante número de cédula y contraseña.
-    Fase actual: Simulación local con la base de datos de Postgres.
-    """
-    # Pasamos los datos al backend personalizado en settings
     user = authenticate(request, username=data.numCedula, password=data.clave)
 
     if user is not None:
-        # Si las credenciales son válidas, iniciamos la sesión en Django
+        # Las cuentas admin/staff son exclusivas del panel /admin/,
+        # no deben poder autenticarse en la API de colaboradores.
+        if user.is_superuser or user.is_staff:
+            return JsonResponse(
+                {"detail": "Número de cédula o contraseña incorrectos"},
+                status=401,
+            )
+
         login(request, user)
 
-        # Simulamos respuesta exitosa
         return {
             "status": "success",
             "message": "Autenticación exitosa",
             "colaborador": {
                 "numCedula": user.username,
+                "nombreCompleto": user.first_name,
                 "estado": "activo",
                 "es_admin": user.is_superuser,
-                "nombreCompleto": user.first_name,
+                "grupos": list(user.groups.values_list("name", flat=True)),
+                "permisos": list(user.get_all_permissions()),
             },
         }
     else:
-        # Si falla, devolvemos un 401 Unauthorized sin dar pistas de qué falló
         return JsonResponse(
-            {
-                "detail": "Número de cédula o contraseña incorrectos",
-            },
+            {"detail": "Número de cédula o contraseña incorrectos"},
             status=401,
         )
 
-
 @api.get("/auth/me", tags=["Autenticación"])
 def get_current_user(request):
-    """
-    Devuelve los datos del usuario autenticado según la sesión actual (cookie). Frontend lo llama al cargar la app para "rehidratar" el estado sin forzar un nuevo login si la sesión de Django sigue siendo válida.
-    """
     if not request.user.is_authenticated:
+        return JsonResponse({"detail": "No hay sesión activa"}, status=401)
+
+    # Misma restricción: una sesión de /admin/ no debe "colarse" como
+    # sesión válida de colaborador en la API.
+    if request.user.is_superuser or request.user.is_staff:
         return JsonResponse({"detail": "No hay sesión activa"}, status=401)
 
     return {
@@ -75,10 +80,10 @@ def get_current_user(request):
             "nombreCompleto": request.user.first_name,
             "estado": "activo",
             "es_admin": request.user.is_superuser,
+            "grupos": list(request.user.groups.values_list("name", flat=True)),
+            "permisos": list(request.user.get_all_permissions()),
         },
     }
-
-
 @api.post("/auth/logout", tags=["Autenticación"])
 def logout_colaborador(request):
     """
